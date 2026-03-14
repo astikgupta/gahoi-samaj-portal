@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { AuthContext } from '../context/AuthContext';
 
 const Profile = () => {
@@ -10,12 +10,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const config = {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`
-                    }
-                };
-                const { data } = await axios.get(`http://localhost:5000/api/auth/me`, config);
+                const { data } = await api.get('/auth/me');
                 setProfile(data);
                 setLoading(false);
             } catch (error) {
@@ -48,13 +43,7 @@ const Profile = () => {
     const submitMatrimonialProfile = async (e) => {
         e.preventDefault();
         try {
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${user.token}`
-                }
-            };
-            await axios.post('http://localhost:5000/api/matrimonial', matrimonialData, config);
+            await api.post('/matrimonial', matrimonialData);
             alert('Matrimonial profile submitted for approval!');
             setShowMatrimonialForm(false);
         } catch (error) {

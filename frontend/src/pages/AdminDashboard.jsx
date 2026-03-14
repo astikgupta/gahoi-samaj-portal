@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { AuthContext } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
 
@@ -13,15 +13,9 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchAdminData = async () => {
             try {
-                const config = {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`
-                    }
-                };
-                
                 const [statsRes, pendingRes] = await Promise.all([
-                    axios.get('http://localhost:5000/api/admin/stats', config),
-                    axios.get('http://localhost:5000/api/admin/pending-approvals', config)
+                    api.get('/admin/stats'),
+                    api.get('/admin/pending-approvals')
                 ]);
                 
                 setStats(statsRes.data);
@@ -42,10 +36,7 @@ const AdminDashboard = () => {
     const handleApproveUser = async (id) => {
         if(window.confirm('Are you sure you want to approve this user?')) {
             try {
-                const config = {
-                    headers: { Authorization: `Bearer ${user.token}` }
-                };
-                await axios.put(`http://localhost:5000/api/admin/approve-user/${id}`, {}, config);
+                await api.put(`/admin/approve-user/${id}`);
                 setPendingUsers(pendingUsers.filter(u => u._id !== id));
                 setStats(prev => ({...prev, users: {...prev.users, pending: prev.users.pending - 1, approved: prev.users.approved + 1}}));
             } catch (error) {

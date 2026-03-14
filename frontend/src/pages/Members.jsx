@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { AuthContext } from '../context/AuthContext';
 
 const Members = () => {
@@ -11,12 +11,7 @@ const Members = () => {
     useEffect(() => {
         const fetchMembers = async () => {
             try {
-                const config = {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`
-                    }
-                };
-                const { data } = await axios.get(`http://localhost:5000/api/users?keyword=${keyword}`, config);
+                const { data } = await api.get(`/users?keyword=${keyword}`);
                 setMembers(data);
                 setLoading(false);
             } catch (error) {

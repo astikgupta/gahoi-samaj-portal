@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { AuthContext } from '../context/AuthContext';
 
 const Matrimonial = () => {
@@ -27,12 +27,7 @@ const Matrimonial = () => {
                     if (filters[key]) queryParams.append(key, filters[key]);
                 });
 
-                const config = {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`
-                    }
-                };
-                const { data } = await axios.get(`http://localhost:5000/api/matrimonial?${queryParams.toString()}`, config);
+                const { data } = await api.get(`/matrimonial?${queryParams.toString()}`);
                 setProfiles(data);
                 setLoading(false);
                 setError('');
